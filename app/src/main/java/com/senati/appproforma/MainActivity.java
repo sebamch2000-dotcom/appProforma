@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtCod, txtProduc, txtPrecio, txtCant;
     private Button btnGrabar, btnEditar, btnEliminar, btnNuevo;
     private ListView listProforma;
-    private TextView txtResult; // Declarado arriba para poder usarlo en varias partes
+    private TextView txtResult;
 
     ArrayList<ProformaItem> lista = new ArrayList<>();
     ArrayAdapter<ProformaItem> adaptador;
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // 1. CORRECCIÓN: IDs enlazados exactamente como están en el XML
+        // Enlaces con la vista XML
         txtCod = findViewById(R.id.txtcodigo);
         txtProduc = findViewById(R.id.txtProducto);
         txtPrecio = findViewById(R.id.txtPrecio);
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         btnEliminar = findViewById(R.id.btnEliminar);
         listProforma = findViewById(R.id.listProforma);
 
-        // 2. CORRECCIÓN: Inicializar y asignar el adaptador al ListView
+        // Inicializar y asignar el adaptador al ListView
         adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, lista);
         listProforma.setAdapter(adaptador);
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Botón Grabar
+        // Botón Grabar (Corregido y unificado)
         btnGrabar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,14 +67,19 @@ public class MainActivity extends AppCompatActivity {
                     double precio = Double.parseDouble(txtPrecio.getText().toString());
                     int cant = Integer.parseInt(txtCant.getText().toString());
 
-                    // Operacion Aritmetica
+                    // Si el DNI tiene más de 6 dígitos, lanzará el error hacia el catch
+                    lista.add(new ProformaItem(dni, prod, precio, cant));
+
+                    // Si todo sale bien, calculamos y mostramos:
                     double total = precio * cant;
                     txtResult.setText("Total: S/. " + total);
-                    lista.add(new ProformaItem(dni, prod, precio, cant));
                     adaptador.notifyDataSetChanged();
                     limpiarCampos();
-                } catch (NumberFormatException e) {
-                    // Evita que la app se cierre si presionan grabar con datos vacíos
+
+                } catch (IllegalArgumentException e) {
+                    // Atrapa el error de los 6 dígitos y lo muestra en rojo
+                    txtCod.setError(e.getMessage());
+                    txtCod.requestFocus();
                 }
             }
         });
@@ -84,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             posSelec = position;
             ProformaItem item = lista.get(position);
 
-            // 3. CORRECCIÓN: Llamar al método getcodigo() exactamente como está en ProformaItem
             txtCod.setText(item.getcodigo());
             txtProduc.setText(item.getProducto());
             txtPrecio.setText(String.valueOf(item.getPrecio()));
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Fin Programacion (Ajustes de ventana)
+        // Ajustes de ventana
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (View v, WindowInsetsCompat insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

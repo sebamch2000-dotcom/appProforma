@@ -3,6 +3,13 @@
     <style name="Base.Theme.AppProforma" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/mi_color_principal</item>
+        <item name="colorPrimaryVariant">@color/mi_color_secundario</item>
+
+        <!-- Mantén el resto como estaba -->
+        <item name="colorOnPrimary">@color/white</item>
+
     </style>
 
     <style name="Theme.AppProforma" parent="Base.Theme.AppProforma" />

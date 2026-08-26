@@ -13,24 +13,25 @@ public class ProformaItem {
         this.precio = precio;
         this.cantidad = cantidad;
     }
+
     public String getcodigo() { return codigo; }
     public String getProducto() { return producto; }
     public double getPrecio() { return precio; }
     public int getCantidad() { return cantidad; }
 
-    // Modificador con límite máximo de 6 caracteres
+    // Modificador que LANZA UN ERROR si excede los 6 caracteres
     public void setCodigo(String codigo) {
         if (codigo != null && codigo.length() > 6) {
-            this.codigo = codigo.substring(0, 6); // Recorta a los primeros 6 caracteres
-        } else {
-            this.codigo = codigo;
+            // Esto "dispara" el error hacia la aplicación
+            throw new IllegalArgumentException("El código no puede tener más de 6 dígitos.");
         }
+        this.codigo = codigo;
     }
 
-    // Modificador con límite máximo de 40 caracteres
+    // Modificador con límite máximo de 40 caracteres (este lo dejamos recortando)
     public void setProducto(String producto) {
         if (producto != null && producto.length() > 40) {
-            this.producto = producto.substring(0, 40); // Recorta a los primeros 40 caracteres
+            this.producto = producto.substring(0, 40);
         } else {
             this.producto = producto;
         }
@@ -51,6 +52,4 @@ public class ProformaItem {
                 " | Cant: " + cantidad +
                 " | Total: S/. " + getTotal();
     }
-
-    //dddd
 }
